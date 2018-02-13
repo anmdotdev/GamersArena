@@ -26,7 +26,10 @@ Sample data being loaded asynchronously through Firebase.
 
 ## Built With
 
-* [React](https://reactjs.org/) 
+* [React 16](https://reactjs.org/) 
+* [Redux](https://redux.js.org/) 
+* [Redux Thunk](https://github.com/gaearon/redux-thunk) 
+
 
 ## Author
 
