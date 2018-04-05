@@ -1,1 +1,1 @@
-export { fetchGamesData, searchValueChanged, sortByHandler } from './gameList';
+export * from './gameList.actions';

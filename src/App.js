@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import GamesLayout from './containers/GamesLayout/GamesLayout';
+import GamesLayout from './pages/GamesLayout/GamesLayout';
 
 class App extends Component {
 	render() {
