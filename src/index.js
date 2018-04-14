@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
+import { fetchGamesData } from './store/sagas/gameList';
 
 import './index.css';
 import App from './App';
@@ -19,7 +21,10 @@ const composeEnhancers =
             : compose
         : null || compose;
 
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk, sagaMiddleware)));
+sagaMiddleware.run(fetchGamesData);
 
 const app = (
     <Provider store={store}>

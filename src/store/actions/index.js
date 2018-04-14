@@ -1,1 +1,1 @@
-export * from './gameList.actions';
+export * from './gameList';

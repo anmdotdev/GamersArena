@@ -1,1 +1,1 @@
-export * from './gameList.constants'
+export * from './gameList';
