@@ -8,7 +8,7 @@ const initialState = {
     currentSearchValue: ''
 };
 
-const gamesReducer = (state = initialState, action) => {
+export default (state = initialState, action) => {
     switch (action.type) {
         case gameListConstants.SET_GAMES_DATA:
             return setGamesData(state, action);
@@ -71,5 +71,3 @@ const sortByHandler = (state, action) => {
         sortingByType: sortTypeWithDirection
     });
 };
-
-export default gamesReducer;
