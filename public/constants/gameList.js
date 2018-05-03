@@ -1,5 +1,0 @@
-export const gameListConstants = {
-    SET_GAMES_DATA: 'SET_GAMES_DATA',
-    SEARCH_VALUE_CHANGED: 'SEARCH_VALUE_CHANGED',
-    SORT_BY_HANDLER: 'SORT_BY_HANDLER'
-};

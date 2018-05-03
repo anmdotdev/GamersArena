@@ -1,4 +1,5 @@
-import { createReducer } from '../shared/reduxorator';
+import createReducer from '../shared/reduxorator';
+import { sortByValue } from '../../shared/utility';
 
 const initialState = {
     games: null,
@@ -7,75 +8,57 @@ const initialState = {
     sortType: 'id'
 };
 
+const searchGames = (state, action) => ({
+    searchValue: action.value,
+    searchResults: state.games.filter(game => game.title.toLowerCase().startsWith(action.value))
+});
+
+const sortGames = (state, action) => {
+    const currentSortType = state.sortType;
+    const newSortType = action.sortType;
+
+    let sortType =
+        newSortType === 'score' || newSortType === 'editors_choice'
+            ? currentSortType === '-' + newSortType
+                ? newSortType
+                : currentSortType === newSortType
+                    ? 'id'
+                    : '-' + newSortType
+            : currentSortType === newSortType
+                ? '-' + newSortType
+                : currentSortType === '-' + newSortType
+                    ? 'id'
+                    : newSortType;
+
+    return {
+        sortType,
+        games: state.games.sort(sortByValue(sortType)),
+        searchResults: state.searchResults ? state.searchResults.sort(sortByValue(sortType)) : null
+    };
+};
+
 const apiActions = [
     {
-        call: 'getActiveShipments',
+        call: 'getGames',
         type: 'get',
-        path: '/v1/games',
-        data: { is_live: true, page_limit: '5' },
+        path: 'https://react-burger-38c78.firebaseio.com/.json',
         action: {
-            initiate: () => 'initiate',
-            success: () => 'success',
-            failure: () => 'failure',
-            reset: () => 'reset'
+            success: response => response.data,
+            failure: error => error
         },
         reducer: {
-            initiate: (s, a) => ({ ...s }),
-            success: (s, a) => ({ ...s }),
-            failure: (s, a) => ({ ...s }),
-            reset: (s, a) => ({ ...s })
-        }
-    },
-    {
-        call: 'getShipmentSummary',
-        type: 'get',
-        path: '/v1/games',
-        data: { is_live: true, page_limit: '5' },
-        action: {
-            initiate: () => 'initiate',
-            success: () => 'success',
-            failure: () => 'failure',
-            reset: () => 'reset'
-        },
-        reducer: {
-            initiate: (s, a) => ({ ...s }),
-            success: (s, a) => ({ ...s }),
-            failure: (s, a) => ({ ...s }),
-            reset: (s, a) => ({ ...s })
-        }
-    },
-    {
-        call: 'getPastShipments',
-        type: 'get',
-        path: '/v1/games',
-        data: { is_live: true, page_limit: '5' },
-        action: {
-            initiate: () => 'initiate',
-            success: () => 'success',
-            failure: () => 'failure',
-            reset: () => 'reset'
-        },
-        reducer: {
-            initiate: (s, a) => ({ ...s }),
-            success: (s, a) => ({ ...s }),
-            failure: (s, a) => ({ ...s }),
-            reset: (s, a) => ({ ...s })
+            success: (state, { data }) => ({ games: data }),
+            failure: (state, { error }) => ({ error })
         }
     }
 ];
 
+// prettier-ignore
 const syncActions = [
-    {
-        type: 'SET_GAMES',
-        data: ['data'],
-        action: {
-            handler: () => 'handler'
-        },
-        reducer: {
-            handler: (s, a) => ({ ...a })
-        }
-    }
+    { call: 'searchGames',  action: value => value,         reducer: searchGames },
+    { call: 'sortGames',    action: sortType => sortType,   reducer: sortGames }
 ];
 
-const prefix = 'GAMES';
-export const { reducer, actions } = createReducer(initialState, apiActions, syncActions, prefix);
+const config = { prefix: 'games' };
+
+export const { reducer, actions } = createReducer(initialState, apiActions, syncActions, config);

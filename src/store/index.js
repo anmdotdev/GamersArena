@@ -14,4 +14,4 @@ const rootReducer = combineReducers({ games });
 
 export default createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 
-
+export { actions as gameActions } from './games';
