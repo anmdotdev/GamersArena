@@ -8,6 +8,22 @@ const initialState = {
     sortType: 'id'
 };
 
+const apiActions = [
+    {
+        call: 'getGames',
+        apiType: 'get',
+        path: 'https://react-burger-38c78.firebaseio.com/.json',
+        action: {
+            success: response => response.data,
+            failure: error => error
+        },
+        reducer: {
+            success: (state, { data }) => ({ games: data }),
+            failure: (state, { error }) => ({ error })
+        }
+    }
+];
+
 const searchGames = (state, action) => ({
     searchValue: action.value,
     searchResults: state.games.filter(game => game.title.toLowerCase().startsWith(action.value))
@@ -37,28 +53,10 @@ const sortGames = (state, action) => {
     };
 };
 
-const apiActions = [
-    {
-        call: 'getGames',
-        type: 'get',
-        path: 'https://react-burger-38c78.firebaseio.com/.json',
-        action: {
-            success: response => response.data,
-            failure: error => error
-        },
-        reducer: {
-            success: (state, { data }) => ({ games: data }),
-            failure: (state, { error }) => ({ error })
-        }
-    }
-];
-
 // prettier-ignore
 const syncActions = [
     { call: 'searchGames',  action: value => value,         reducer: searchGames },
     { call: 'sortGames',    action: sortType => sortType,   reducer: sortGames }
 ];
 
-const config = { prefix: 'games' };
-
-export const { reducer, actions } = createReducer(initialState, apiActions, syncActions, config);
+export const { reducer, actions } = createReducer(initialState, apiActions, syncActions);
