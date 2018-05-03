@@ -1,9 +1,7 @@
-import { combineReducers, compose, applyMiddleware, createStore } from 'redux';
+import { compose, combineReducers, applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import { gameList } from './reducers';
-
-const rootReducer = combineReducers({ gameList });
+import { reducer as games } from './games';
 
 const composeEnhancers =
     process.env.NODE_ENV === 'development'
@@ -12,4 +10,8 @@ const composeEnhancers =
             : compose
         : null || compose;
 
+const rootReducer = combineReducers({ games });
+
 export default createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+
+
