@@ -9,7 +9,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 class GamesList extends Component {
     componentDidMount() {
-        this.props.fetchGamesData();
+        this.props.getGames();
     }
 
     render() {

@@ -12,14 +12,12 @@ const apiActions = [
     {
         call: 'getGames',
         apiType: 'get',
-        path: 'https://react-burger-38c78.firebaseio.com/.json',
+        path: '/.json',
         action: {
-            success: response => response.data,
-            failure: error => error
+            success: response => response.data
         },
         reducer: {
-            success: (state, { data }) => ({ games: data }),
-            failure: (state, { error }) => ({ error })
+            success: (state, { data }) => ({ games: data })
         }
     }
 ];
@@ -55,8 +53,12 @@ const sortGames = (state, action) => {
 
 // prettier-ignore
 const syncActions = [
-    { call: 'searchGames',  action: value => value,         reducer: searchGames },
-    { call: 'sortGames',    action: sortType => sortType,   reducer: sortGames }
+    { call: 'searchGames',  action: value => ({ value }),         reducer: searchGames },
+    { call: 'sortGames',    action: sortType => ({ sortType }),   reducer: sortGames }
 ];
 
-export const { reducer, actions } = createReducer(initialState, apiActions, syncActions);
+const config = {
+    prefix: 'GAMES'
+};
+
+export const { reducer, actions } = createReducer(initialState, apiActions, syncActions, config);
