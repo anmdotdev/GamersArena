@@ -1,13 +1,26 @@
-import * as api from '../helpers/api';
+import * as api from '../api';
 
 export default (initialState, apiActions, syncActions, config) => {
-    const createdAPIActions = apiActions.map(apiAction => createAPIAction(apiAction, config));
-    const createdSyncActions = syncActions.map(syncAction => createSyncActions(syncAction, config));
-
-    const actions = { ...createdAPIActions, ...createdSyncActions };
-    const reducer = generateReducerFunction(initialState, config);
+    const actions = createActions(apiActions, syncActions, config);
+    const reducer = generateReducerFunction(initialState, apiActions, syncActions, config);
 
     return { actions, reducer };
+};
+
+const createActions = (apiActions, syncActions, config) => {
+    const actions = {};
+
+    for (let i = 0; i < apiActions.length - 1; i++) {
+        const { generatedAction, generatedResetAction } = createAPIAction(apiActions[0], config);
+        actions[apiActions[0].call] = generatedAction;
+        actions['reset' + apiActions[0].call + 'Status'] = generatedResetAction;
+    }
+
+    for (let i = 0; i < syncActions.length - 1; i++) {
+        actions[syncActions[0].call] = createSyncActions(syncActions[0], config);
+    }
+
+    return actions;
 };
 
 const createAPIAction = (apiAction, config) => {
@@ -18,11 +31,11 @@ const createAPIAction = (apiAction, config) => {
         g => g[0] + '_' + g[1]
     )}`.toUpperCase();
 
-    const [call] = () => {
+    const generatedAction = () => {
         return dispatch => {
             dispatch({ type: actionType + '_INITIATED', ...action.initiated() });
 
-            api[apiType](path, params.apiParams).then(
+            api[apiType](path).then(
                 response => dispatch(success(response)),
                 error => dispatch(failure(error))
             );
@@ -52,6 +65,10 @@ const createAPIAction = (apiAction, config) => {
             };
         }
     };
+
+    const generatedResetAction = () => ({ type: actionType + '_RESET' });
+
+    return { generatedAction, generatedResetAction };
 };
 
 const createSyncActions = (syncAction, config) => {

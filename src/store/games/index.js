@@ -1,4 +1,4 @@
-import createReducer from '../shared/reduxorator';
+import createReducer from '../../utils/reduxorator';
 
 import apiActions from './apiActions';
 import syncActions from './syncActions';

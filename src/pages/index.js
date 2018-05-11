@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react';
 
 import { connect } from 'react-redux';
-import { gamesActions } from '../../store';
+import { gamesActions } from '../store';
 
-import GameHeader from '../../components/GamesLayout/GameHeader/GameHeader';
-import GameList from '../../components/GamesLayout/GameList/GameList';
-import Spinner from '../../components/UI/Spinner/Spinner';
+import GameHeader from '../components/GamesLayout/GameHeader/GameHeader';
+import GameList from '../components/GamesLayout/GameList/GameList';
+import Spinner from '../components/UI/Spinner/Spinner';
 
 class GamesList extends Component {
     componentDidMount() {
@@ -40,6 +40,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     const { getGames, searchGames, sortGames } = gamesActions;
+    console.log(gamesActions);
     return {
         getGames: () => dispatch(getGames()),
         searchGames: value => dispatch(searchGames(value)),
